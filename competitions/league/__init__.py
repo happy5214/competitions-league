@@ -34,7 +34,7 @@ class League(object):
 
     @property
     def round(self):
-        """The current round."""
+        """Return the current round."""
         return self._round
 
     def _wrap_teams(self):
@@ -46,10 +46,11 @@ class League(object):
         raise NotImplementedError
 
     def play_round(self):
-        """Simulates a round of matches."""
+        """Simulate a round of matches."""
         raise NotImplementedError
 
     def play_season(self):
+        """Simulate the entire league season."""
         try:
             while True:
                 self.play_round()
@@ -57,7 +58,7 @@ class League(object):
             return self._teams[0]
 
     def print_standings(self):
-        """Prints the league table/standings to the console."""
+        """Print the league table/standings to the console."""
         raise NotImplementedError
 
 
@@ -78,7 +79,7 @@ class FixtureLeague(League):
         self._fixtures = {}
 
     def print_fixtures(self):
-        """Prints the fixture table to the console."""
+        """Print the fixture table to the console."""
         raise NotImplementedError
 
 
@@ -87,37 +88,36 @@ class TeamSeason(object):
     """A team's participation in a league."""
 
     def __init__(self, team):
-        self._team = team
+        """Constructor.
 
-    def __unicode__(self):
-        """Return a unicode representation of the team's season.
-
-        This simply returns the unicode version of the team.
-        @return: The team's season as a unicode string
-        @rtype: unicode
+        @param team: The team competing in the league.
+        @type team: Team-like object.
         """
-        return unicode(self._team)
+        self._team = team
 
     def __str__(self):
         """Return a str representation of the team's season.
 
-        The format of the string is the same as that returned by __unicode__,
-        except that it is a str object instead of a unicode object.
+        This simply returns the str version of the team.
+
         @return: The team's season as a str
         @rtype: str
         """
-        return str(self.__unicode__())
+        return str(self._team)
 
     @property
     def team(self):
+        """Return the team competing in the league."""
         return self._team
 
     @property
     def key(self):
+        """Return the sortkey for this type of team."""
         raise NotImplementedError
 
     @property
     def standings_str(self):
+        """Return a string to be printed as part of the league standings."""
         raise NotImplementedError
 
 
@@ -126,6 +126,7 @@ class WinLoseDrawTeamSeason(TeamSeason):
     """A TeamSeason based on wins, losses, and draws."""
 
     def __init__(self, team):
+        """Constructor."""
         super(WinLoseDrawTeamSeason, self).__init__(team)
         self._wins = 0
         self._losses = 0
@@ -133,23 +134,29 @@ class WinLoseDrawTeamSeason(TeamSeason):
 
     @property
     def wins(self):
+        """Return the number of wins for this team in this league."""
         return self._wins
 
     @property
     def losses(self):
+        """Return the number of losses for this team in this league."""
         return self._losses
 
     @property
     def draws(self):
+        """Return the number of draws for this team in this league."""
         return self._draws
 
     def won(self):
-            self._wins += 1
+        """Increment this team's win count."""
+        self._wins += 1
 
     def lost(self):
+        """Increment this team's loss count."""
         self._losses += 1
 
     def drew(self):
+        """Increment this team's draw count."""
         self._draws += 1
 
 
@@ -158,24 +165,30 @@ class GoalBasedTeamSeason(TeamSeason):
     """A TeamSeason based on goals (use PointBasedTeamSeason if points are used)."""
 
     def __init__(self, team):
+        """Constructor."""
         super(GoalBasedTeamSeason, self).__init__(team)
         self._goals_for = 0
         self._goals_against = 0
 
     @property
     def goals_for(self):
+        """Return the number of goals scored by this team."""
         return self._goals_for
 
     @property
     def goals_against(self):
+        """Return the number of goals allowed by this team."""
         return self._goals_against
 
     @property
     def goal_diff(self):
+        """Return this team's goal differential."""
         return self._goals_for - self._goals_against
 
     def scored(self, goals):
+        """Add scored goals to this team's stats."""
         self._goals_for += goals
 
     def allowed(self, goals):
+        """Add allowed goals to this team's stats."""
         self._goals_against += goals

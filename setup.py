@@ -44,5 +44,6 @@ setup(
 
     test_suite='tests',
 
-    install_requires=['competitions-match>=0.3'],
+    install_requires=['competitions-match>=0.3',
+                      'competitions-scheduler>=0.2'],
 )

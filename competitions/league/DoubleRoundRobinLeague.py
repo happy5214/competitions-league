@@ -49,7 +49,7 @@ class DoubleRoundRobinLeague(FixtureLeague):
             self._teams.append(self.TeamSeason(team))
 
     def play_round(self):
-        """Simulates a round of matches."""
+        """Simulate a round of matches."""
         Match = self._match_class
         round_matches = self._schedule[self.round]
         for teams in round_matches:
@@ -61,14 +61,14 @@ class DoubleRoundRobinLeague(FixtureLeague):
         self._teams.sort(key=self.TeamSeason.key, reverse=True)
 
     def print_standings(self):
-        """Prints the league table to the console."""
+        """Print the league table to the console."""
         print("After Round {0}:".format(self.round))
         print(self.standings_header)
         for team in self._teams:
             print(team.standings_str())
 
     def print_fixtures(self):
-        """Prints the fixture table to the console."""
+        """Print the fixture table to the console."""
         for home in self._teams:
             for away in self._teams:
                 if home == away or ((home, away) not in self._fixtures):
@@ -87,21 +87,28 @@ class AssociationFootballDoubleRoundRobinLeague(DoubleRoundRobinLeague):
     )
 
     class TeamSeason(WinLoseDrawTeamSeason, GoalBasedTeamSeason):
+
+        """An association football team season."""
+
         @staticmethod
         def key(x):
+            """Return the sortkey for this type of object."""
             return (x.points, x.goal_diff, x.goals_for)
 
         @property
         def points(self):
+            """Return the number of points accumulated by this team."""
             return self.wins * 3 + self.draws
 
         def standings_str(self):
+            """Return a string to be printed in the league standings."""
             return "{:<30}\t{:>5}\t{:>5}\t{:>5}\t{:>5}\t{:>5}\t{:>5}\t{:>5}".format(
                 self, self.wins, self.losses, self.draws, self.points,
                 self.goals_for, self.goals_against, self.goal_diff
             )
 
     def _merge_stats(self, match):
+        """Merge the match stats into the TeamSeason objects."""
         team1 = match.team1
         team2 = match.team2
         if match.drawn:
